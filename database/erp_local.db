@@ -1,0 +1,51 @@
+import sqlite3
+import pandas as pd
+
+DB_NAME = "database/erp_local.db"
+
+def init_db_local():
+    """Crea la base de datos de pruebas local"""
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    
+    # Tabla de Proyectos
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS proyectos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            codigo TEXT UNIQUE,
+            nombre TEXT,
+            presupuesto_total REAL,
+            estado TEXT DEFAULT 'activo'
+        )
+    ''')
+    
+    # Tabla de Requisiciones
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS requisiciones (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            proyecto_id INTEGER,
+            insumo TEXT,
+            cantidad REAL,
+            unidad TEXT,
+            estatus TEXT DEFAULT 'pendiente',
+            FOREIGN KEY (proyecto_id) REFERENCES proyectos (id)
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+def obtener_proyectos():
+    conn = sqlite3.connect(DB_NAME)
+    df = pd.read_sql_query("SELECT * FROM proyectos", conn)
+    conn.close()
+    return df
+
+def guardar_proyecto(codigo, nombre, presupuesto):
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO proyectos (codigo, nombre, presupuesto_total) VALUES (?, ?, ?)",
+        (codigo, nombre, presupuesto)
+    )
+    conn.commit()
+    conn.close()
