@@ -1,0 +1,12 @@
+erp-construccion/
+│
+├── .gitignore
+├── app.py                   # Enrutador principal de Streamlit
+├── requirements.txt         # Librerías necesarias
+├── database/
+│   ├── mock_db.py           # Funciones temporales (guardan en SQLite local o listas)
+│   └── schema.sql           # Esqueleto de tus tablas (borrador local)
+└── modules/
+    ├── proyectos.py         # Interfaz de proyectos
+    ├── requisiciones.py     # Interfaz de requisiciones de campo
+    └── estimaciones.py      # Interfaz de avance y gastos
